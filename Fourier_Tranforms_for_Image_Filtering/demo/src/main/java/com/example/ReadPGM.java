@@ -10,7 +10,7 @@ public class ReadPGM {
 
     public static void main(String [] args) throws Exception {
 
-        String fileName = args.length > 0 ? args [0] : "\\\\Su2\\uo\\up2066541\\Downloads\\LAB1\\Fourier_Tranforms_for_Image_Filtering\\demo\\src\\main\\java\\com\\example\\wolf.pgm" ;
+        String fileName = args.length > 0 ? args [0] : "Fourier_Tranforms_for_Image_Filtering/demo/src/main/java/com/example/wolf.pgm" ;
         
         double [] [] density = new double [N] [N] ;
         read(density, fileName, N) ;
