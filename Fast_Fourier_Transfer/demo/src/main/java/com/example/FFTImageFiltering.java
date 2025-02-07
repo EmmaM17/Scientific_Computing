@@ -1,5 +1,4 @@
 package com.example;
-
 public class FFTImageFiltering {
 
     public static int N = 256 ;
@@ -7,7 +6,8 @@ public class FFTImageFiltering {
     public static void main(String [] args) throws Exception {
 
         double [] [] X = new double [N] [N] ;
-        ReadPGM.read(X, "wolf.pgm", N) ;
+        ReadPGM.read(X, "Fast_Fourier_Transfer/demo/src/main/java/com/example/wolf.pgm", N) ;
+
 
         DisplayDensity display =
                 new DisplayDensity(X, N, "Original Image") ;
@@ -42,5 +42,39 @@ public class FFTImageFiltering {
     }
 
     //... implementation of fft2d ...
+
+    //Swap i and j
+    static void transpose(double [] [] a) {
+
+        for(int i = 0 ; i < N ; i++) {
+            for(int j = 0 ; j < i ; j++) {
+                double temp = a[i][j];
+                a[i][j] = a[j][i];
+                a[j][i] = temp;
+            }
+        }
+    }
+
+    static void fft2d(double [] [] re, double [] [] im, int isgn) {
+
+        
+
+        //... fft1d on all rows of re, im ...
+        for (int r=0; r<re.length;r++){
+           OneDimFFT.fft1d(re[r], im[r], isgn); 
+        }
+        
+
+        transpose(re) ;
+        transpose(im) ;
+
+        //... fft1d on all rows of re, im ...
+        for (int c=0; c< re.length; c++){
+            OneDimFFT.fft1d(re[c], im[c], isgn); 
+         }
+
+        transpose(re) ;
+        transpose(im) ;
+    }
 
 }
