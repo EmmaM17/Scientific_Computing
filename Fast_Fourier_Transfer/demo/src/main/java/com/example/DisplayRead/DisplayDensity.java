@@ -1,4 +1,4 @@
-package com.example;
+package com.example.DisplayRead;
 import java.awt.* ;
 import javax.swing.* ;
 
@@ -15,7 +15,7 @@ public class DisplayDensity extends JPanel {
 
     boolean doScale ;
 
-    DisplayDensity(double [] [] density, int n, String title) {
+    public DisplayDensity(double [] [] density, int n, String title) {
         this(density, n, title, Double.MIN_VALUE, Double.MAX_VALUE) ;
     }
 

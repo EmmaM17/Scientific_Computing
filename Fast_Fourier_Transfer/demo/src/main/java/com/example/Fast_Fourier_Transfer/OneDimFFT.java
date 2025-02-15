@@ -1,4 +1,4 @@
-package com.example;
+package com.example.Fast_Fourier_Transfer;
 public class OneDimFFT {
 
     public static void fft1d(double [] re, double [] im, int isgn) {

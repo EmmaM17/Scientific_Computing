@@ -1,7 +1,8 @@
+package com.example.DisplayRead;
 
 import java.io.FileReader ;
-import java.io.IOException ;
 import java.io.StreamTokenizer ;
+import java.io.IOException ;
 
 public class ReadPGM {
 
@@ -17,7 +18,7 @@ public class ReadPGM {
         DisplayDensity display = new DisplayDensity(density, N, fileName) ;
     }
 
-    static double read(double [] [] density, String fileName, int n) 
+    public static double read(double [] [] density, String fileName, int n) 
             throws IOException {
 
         // Read n x n PGM image

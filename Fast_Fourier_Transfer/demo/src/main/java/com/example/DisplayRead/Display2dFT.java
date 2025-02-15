@@ -1,4 +1,4 @@
-package com.example;
+package com.example.DisplayRead;
 
 import java.util.Arrays ;
 
@@ -13,7 +13,7 @@ public class Display2dFT extends JPanel {
 
     double [] [] ftRe, ftIm ;
 
-    Display2dFT(double [] [] ftRe, double [] [] ftIm, int n, String title) {
+    public Display2dFT(double [] [] ftRe, double [] [] ftIm, int n, String title) {
 
         setPreferredSize(new Dimension(CELL_SIZE * n, CELL_SIZE * n)) ;
 
