@@ -52,9 +52,6 @@ public class FFTImageFiltering {
                   new Display2dFT(CRe, CIm, N, "Truncated FT") ;
     
 
-
-
-
             // create array for in-place inverse FFT, and copy FT to it
             double [] [] reconRe = new double [N] [N],
                          reconIm = new double [N] [N] ;
@@ -113,4 +110,4 @@ public class FFTImageFiltering {
          
         }   
     }
-       
+      

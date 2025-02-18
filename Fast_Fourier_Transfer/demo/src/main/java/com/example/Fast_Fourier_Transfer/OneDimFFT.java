@@ -15,24 +15,23 @@ public class OneDimFFT {
         // isgn = +1 or -1 for forward or inverse transform.
 
         // Size of arrays should be a power or two.
-
+ 
         final double pi = Math.PI ;
 
         final int N = re.length ;  // im better be the same size
-
+     
         bitReverse(re, im) ;
 
         int ln2   = ilog2(N)  ;  // Base 2 log of the leading dimension.
-
+      
         // Danielson-Lanczos algorithm for FFT.
 
         for(int ilevel = 1 ; ilevel <= ln2 ; ilevel++) {
             int le   = ipow(2,ilevel) ;
             int lev2 = le / 2 ;
-
             double uRe = 1.0F ;
             double uIm = 0.0F ;
-
+           
             double wRe = Math.cos(isgn * pi / lev2) ;
             double wIm = Math.sin(isgn * pi / lev2) ;
 
@@ -40,6 +39,7 @@ public class OneDimFFT {
                 for(int ii = jj ; ii < N ; ii += le) {
                     int jndex = ii + lev2 ;
                     int index = ii ;
+                
 
                     //tmp      = u * a(jndex) ;
                     double tmpRe = uRe * re [jndex] - uIm * im [jndex] ;
