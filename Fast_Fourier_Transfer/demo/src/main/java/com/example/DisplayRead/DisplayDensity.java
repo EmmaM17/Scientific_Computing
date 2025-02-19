@@ -19,7 +19,7 @@ public class DisplayDensity extends JPanel {
         this(density, n, title, Double.MIN_VALUE, Double.MAX_VALUE) ;
     }
 
-    DisplayDensity(double [] [] density, int n, String title,
+    public DisplayDensity(double [] [] density, int n, String title,
                    double greyScaleLo, double greyScaleHi) {
 
         setPreferredSize(new Dimension(CELL_SIZE * n, CELL_SIZE * n)) ;

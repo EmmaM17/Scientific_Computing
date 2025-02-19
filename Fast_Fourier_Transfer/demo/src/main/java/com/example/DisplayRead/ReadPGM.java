@@ -6,11 +6,11 @@ import java.io.IOException ;
 
 public class ReadPGM {
 
-    public static int N = 676 ;
+    public static int N = 256 ;
 
     public static void readPGM(String [] args) throws Exception {
 
-        String fileName = args.length > 0 ? args [0] : "Fourier_Tranforms_for_Image_Filtering/demo/src/main/java/com/example/lion.pgm" ;
+        String fileName = args.length > 0 ? args [0] : "Fourier_Tranforms_for_Image_Filtering/demo/src/main/java/com/example/wolf.pgm" ;
         
         double [] [] density = new double [N] [N] ;
         read(density, fileName, N) ;
