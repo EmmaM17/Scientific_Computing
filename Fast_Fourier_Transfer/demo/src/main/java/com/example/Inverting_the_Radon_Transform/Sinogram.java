@@ -1,7 +1,6 @@
 package com.example.Inverting_the_Radon_Transform;
 import com.example.DisplayRead.DisplayDensity;
 import com.example.Fast_Fourier_Transfer.OneDimFFT;
-
 import java.util.Arrays ;
 
 import java.awt.* ;
@@ -70,27 +69,43 @@ public class Sinogram {
 
 
         // ... Insert sinogram filtering code here! ...
+            
+        double[][] sinogramFTRe = new double[N][N];
+        double[][] sinogramFTIm = new double[N][N];
 
-        double [] [] sinogramFTRe = new double [N] [N],
-        sinogramFTIm = new double [N] [N] ;
-        for(int iTheta = 0 ; iTheta < N ; iTheta++) {
-        for(int iR = 0 ; iR < N ; iR++) {
-        sinogramFTRe [iTheta] [iR] = sinogram [iTheta] [iR] ;
-        }
-        }
-
-        for(int iTheta = 0 ; iTheta < N ; iTheta++) {
-            OneDimFFT.fft1d(sinogramFTRe[iTheta], sinogramFTIm[iTheta], 1);
-
+        for (int iTheta = 0; iTheta < N; iTheta++) {
+            for (int iR = 0; iR < N; iR++) {
+                sinogramFTRe[iTheta][iR] = sinogram[iTheta][iR];
+                sinogramFTIm[iTheta][iR] = 0;  // Imaginary part initialized to 0
+            }
+            OneDimFFT.fft1d(sinogramFTRe[iTheta], sinogramFTIm[iTheta], 1);  // Forward FFT
         }
 
+        // Display the Fourier Transform of the sinogram
         DisplaySinogramFT display3 =
-        new DisplaySinogramFT(sinogramFTRe, sinogramFTIm, N,
-                                "Sinogram radial Fourier Transform") ;
+            new DisplaySinogramFT(sinogramFTRe, sinogramFTIm, N, "Sinogram radial Fourier Transform");
 
+        for (int iTheta = 0; iTheta < N; iTheta++) {
+            for (int iK = 0; iK < N; iK++) {
+                int kSigned = (iK <= N/2) ? iK : (iK - N);
+                double filterFactor = Math.abs(kSigned);  // Ramp filter |k|
+                
+                sinogramFTRe[iTheta][iK] *= filterFactor;
+                sinogramFTIm[iTheta][iK] *= filterFactor;
+            }
+        }
 
-        double [] [] backProjection = new double [N] [N] ;
-        backProject(backProjection, sinogram) ;
+   
+        for (int iTheta = 0; iTheta < N; iTheta++) {
+            OneDimFFT.fft1d(sinogramFTRe[iTheta], sinogramFTIm[iTheta], -1);  // Inverse FFT
+        }
+
+        double[][] backProjection = new double[N][N];
+        backProject(backProjection, sinogramFTRe);  // Use real part only
+
+        //----
+      
+        
 
         // Normalize reconstruction, to have same sum as inferred for
         // original density
@@ -103,8 +118,9 @@ public class Sinogram {
         }
 
         DisplayDensity display5 =
-                new DisplayDensity(backProjection, N,
-                                   "Back projected sinogram") ;
+        new DisplayDensity(backProjection, N,
+                           "Back projected sinogram",
+                           GREY_SCALE_LO, GREY_SCALE_HI) ;
     }
 
     static void backProject(double [] [] projection, double [] [] sinogram) {
