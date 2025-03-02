@@ -1,6 +1,7 @@
 package com.example.Inverting_the_Radon_Transform;
 import com.example.DisplayRead.DisplayDensity;
 import com.example.Fast_Fourier_Transfer.OneDimFFT;
+
 import java.util.Arrays ;
 
 import java.awt.* ;
@@ -22,7 +23,7 @@ public class Sinogram {
         // Clipping, for display only.  See for example Figure 1 in:
         //    http://bigwww.epfl.ch/thevenaz/shepplogan/
 
-    public static void sinogram(String [] args) {
+    public static void fftSinogram(String [] args) {
 
         double [] [] density = new double [N] [N] ;
 
@@ -68,44 +69,78 @@ public class Sinogram {
         double normDensity = norm1(sinogram [0]) ;
 
 
-        // ... Insert sinogram filtering code here! ...
-            
-        double[][] sinogramFTRe = new double[N][N];
-        double[][] sinogramFTIm = new double[N][N];
-
-        for (int iTheta = 0; iTheta < N; iTheta++) {
-            for (int iR = 0; iR < N; iR++) {
-                sinogramFTRe[iTheta][iR] = sinogram[iTheta][iR];
-                sinogramFTIm[iTheta][iR] = 0;  // Imaginary part initialized to 0
+        // ... Insert sinogram filtering code here! ... ############################################################
+        double [] [] sinogramFTRe = new double [N] [N],
+        sinogramFTIm = new double [N] [N] ;
+        for(int iTheta = 0 ; iTheta < N ; iTheta++) {
+            for(int iR = 0 ; iR < N ; iR++) {
+            sinogramFTRe [iTheta] [iR] = sinogram [iTheta] [iR] ;
             }
-            OneDimFFT.fft1d(sinogramFTRe[iTheta], sinogramFTIm[iTheta], 1);  // Forward FFT
         }
 
-        // Display the Fourier Transform of the sinogram
+        for(int iTheta = 0 ; iTheta < N ; iTheta++) {
+            OneDimFFT.fft1d(sinogramFTRe[iTheta], sinogramFTIm[iTheta], 1);
+        }
+
         DisplaySinogramFT display3 =
-            new DisplaySinogramFT(sinogramFTRe, sinogramFTIm, N, "Sinogram radial Fourier Transform");
+        new DisplaySinogramFT(sinogramFTRe, sinogramFTIm, N,
+                                "Sinogram radial Fourier Transform") ;
 
-        for (int iTheta = 0; iTheta < N; iTheta++) {
-            for (int iK = 0; iK < N; iK++) {
-                int kSigned = (iK <= N/2) ? iK : (iK - N);
-                double filterFactor = Math.abs(kSigned);  // Ramp filter |k|
+        //end of sinogram fft filtering
+
+        //filter rows of fourier transform
+
+        int CUTOFF = N / 2;
+
+        for(int iTheta = 0 ; iTheta < N ; iTheta++) {
+            for(int iK = 0 ; iK < N ; iK++) {
                 
-                sinogramFTRe[iTheta][iK] *= filterFactor;
-                sinogramFTIm[iTheta][iK] *= filterFactor;
+                int kSigned = iK <= N/2 ? iK : iK - N ;
+                int absK =  Math.abs(kSigned); // Take absolute value
+               // System.out.println("ksigned: "+ kSigned);
+                // Multiply sinogramFT by abs(kSigned)
+                //sinogramFTRe[iTheta][iK] *= absK;
+                //sinogramFTIm[iTheta][iK] *= absK;
+
+                // Apply filter only for frequencies within the cutoff RAM LAK
+              /*   if (absK <= CUTOFF) {
+                    sinogramFTRe[iTheta][iK] *= absK;
+                    sinogramFTIm[iTheta][iK] *= absK;
+                } else {
+                    // Zero out high-frequency components
+                    sinogramFTRe[iTheta][iK] = 0;
+                    sinogramFTIm[iTheta][iK] = 0;
+                } */
+
+                // LOW PASS COSINE
+                if (absK <= CUTOFF) {
+                    // Apply Low-Pass Cosine Filter
+                    double cosineFactor = Math.cos((Math.PI * absK) / (2.0 * CUTOFF));
+                    double filterValue = absK * cosineFactor;
+                    
+                    sinogramFTRe[iTheta][iK] *= filterValue;
+                    sinogramFTIm[iTheta][iK] *= filterValue;
+                } else {
+                    // Zero out high frequencies
+                    sinogramFTRe[iTheta][iK] = 0;
+                    sinogramFTIm[iTheta][iK] = 0;
+                }
             }
         }
-
-   
-        for (int iTheta = 0; iTheta < N; iTheta++) {
-            OneDimFFT.fft1d(sinogramFTRe[iTheta], sinogramFTIm[iTheta], -1);  // Inverse FFT
-        }
-
-        double[][] backProjection = new double[N][N];
-        backProject(backProjection, sinogramFTRe);  // Use real part only
-
-        //----
-      
+        // end filter 
         
+        //invert fft
+        for(int iTheta = 0 ; iTheta < N ; iTheta++) {
+            OneDimFFT.fft1d(sinogramFTRe[iTheta], sinogramFTIm[iTheta], -1);
+        }
+        DisplayDensity display5 =
+        new DisplayDensity(sinogramFTRe, N, "Filtered sinogram") ;
+       
+
+        //end of inverse
+
+        double [] [] backProjection = new double [N] [N] ;
+        backProject(backProjection, sinogramFTRe) ;
 
         // Normalize reconstruction, to have same sum as inferred for
         // original density
@@ -117,11 +152,12 @@ public class Sinogram {
             }
         }
 
-        DisplayDensity display5 =
-        new DisplayDensity(backProjection, N,
-                           "Back projected sinogram",
-                           GREY_SCALE_LO, GREY_SCALE_HI) ;
+        DisplayDensity display6 =
+                new DisplayDensity(backProjection, N,
+                                   "Back projected sinogram",
+                                   GREY_SCALE_LO, GREY_SCALE_HI) ;
     }
+    //##############################################################################################################
 
     static void backProject(double [] [] projection, double [] [] sinogram) {
 

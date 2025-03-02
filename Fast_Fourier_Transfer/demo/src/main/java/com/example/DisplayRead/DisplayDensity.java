@@ -5,7 +5,7 @@ import javax.swing.* ;
 
 public class DisplayDensity extends JPanel {
 
-    public static int CELL_SIZE = 1 ;
+    public static int CELL_SIZE = 1 ; //updated for week 4 labsheet (1)
 
     int n ;
 
