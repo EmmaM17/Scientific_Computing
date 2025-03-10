@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.Excitable_Media.GerhardtSchusterTyson;
+import com.example.Excitable_Media.SimpleThreeStateCA;
 import com.example.Fast_Fourier_Transfer.FFTImageFiltering;
 import com.example.Fast_Fourier_Transfer.Parallel_FFT;
 import com.example.Fourier_Transforms_for_Image_Filtering.SimpleFT;
@@ -25,5 +27,8 @@ public class Main{
 
          //HPP.hpp(args);
          //FHP.fhp(args);
-         GreyScaleFHP.greyFhp(args);
+         //GreyScaleFHP.greyFhp(args);
+
+         //SimpleThreeStateCA.simple3stateCA(args);
+         GerhardtSchusterTyson.GST(args);
 }}
