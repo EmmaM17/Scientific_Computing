@@ -1,7 +1,5 @@
 package com.example;
 
-import com.example.Attempted_Application_to_Aerodynamics.Airfoil;
-import com.example.Excitable_Media.FourStateCA;
 import com.example.Excitable_Media.GerhardtSchusterTyson;
 import com.example.Excitable_Media.SimpleThreeStateCA;
 import com.example.Fast_Fourier_Transfer.FFTImageFiltering;
@@ -9,7 +7,6 @@ import com.example.Fast_Fourier_Transfer.Parallel_FFT;
 import com.example.Fourier_Transforms_for_Image_Filtering.SimpleFT;
 import com.example.Inverting_the_Radon_Transform.Sinogram;
 import com.example.Inverting_the_Radon_Transform.SinogramUnfiltered;
-import com.example.Lattice_Boltzmann_Model.LBM;
 import com.example.Lattice_Gas_Model.FHP;
 import com.example.Lattice_Gas_Model.GreyScaleFHP;
 import com.example.Lattice_Gas_Model.HPP;
@@ -33,10 +30,5 @@ public class Main{
          //GreyScaleFHP.greyFhp(args);
 
          //SimpleThreeStateCA.simple3stateCA(args);
-         //GerhardtSchusterTyson.GST(args);
-         //FourStateCA.simple4stateCA(args);
-
-         //LBM.lbm(args);
-
-         Airfoil.airfoil(args);
+         GerhardtSchusterTyson.GST(args);
 }}
